@@ -1,47 +1,21 @@
 package main
 
+import (
+	"github.com/k0kubun/pp"
+)
+
 func main() {
 
-	// templateData, err := ioutil.ReadFile("./template_type/helper_type.tmpl")
-	// if err != nil {
-	// 	panic(err)
-	// }
-
-	// t, err := template.New("simpleCRUD").Parse(string(templateData))
-	// if err != nil {
-	// 	panic(err)
-	// }
-
-	// err = os.Mkdir("helpers", 0777)
-	// if err != nil {
-	// 	if err == os.ErrExist {
-	// 		log.Println("Already exist")
-	// 	} else {
-	// 		panic(err)
-	// 	}
-	// }
-
-	// for _, typeDecl := range types {
-
-	// 	file, err := os.Create(fmt.Sprintf("./helpers/%s_helper.go", typeDecl.TypePackage))
-	// 	if err != nil {
-	// 		if err == os.ErrExist {
-	// 			log.Println("Already exist")
-	// 		} else {
-	// 			panic(err)
-	// 		}
-
-	// 	}
-
-	// 	err = t.Execute(file, typeDecl)
-	// 	if err != nil {
-	// 		panic(err)
-	// 	}
-
-	// }
-
-	err := GenerateFolderStruct("./myproject")
+	configProject, err := GetConfigFromFile("config.json")
 	if err != nil {
 		panic(err)
 	}
+
+	pp.Println(configProject)
+
+	err = GenerateHelpers(configProject)
+	if err != nil {
+		panic(err)
+	}
+
 }

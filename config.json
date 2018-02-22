@@ -1,4 +1,9 @@
 {
+	"project": {
+		"name": "myproject",
+		"author": "Bregy Malpartida",
+		"version": "1.0"
+	},
 	"types": {
 		"definitions": "./types/types.go"
 	},

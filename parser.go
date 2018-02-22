@@ -10,15 +10,10 @@ import (
 )
 
 // GetTypesDefinitions ...
-func GetTypesDefinitions(configPath string) ([]*TypeDefinition, error) {
-	config, err := GetConfigFromFile(configPath)
-	if err != nil {
-		return nil, err
-	}
-
+func GetTypesDefinitions(config *ConfigFile) ([]*TypeDefinition, error) {
 	fset := token.NewFileSet()
 
-	src, _ := ioutil.ReadFile(config.Type.Definitions)
+	src, _ := ioutil.ReadFile(config.Types.Definitions)
 
 	f, err := parser.ParseFile(fset, "", src, parser.Trace)
 	if err != nil {

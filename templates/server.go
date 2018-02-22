@@ -11,5 +11,10 @@ const apiVersion = "1.0"
 func main() {
 	app := iris.Default()
 
-	app.Party(fmt.Sprintf("/api/%s", apiVersion))
+	apiParty := app.Party(fmt.Sprintf("/api/v%s", apiVersion))
+
+	LinkWithUserType(apiParty)
+
+	app.Run(iris.Addr(":8080"))
+
 }

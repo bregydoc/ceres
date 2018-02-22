@@ -5,16 +5,6 @@ import (
 	"io/ioutil"
 )
 
-// ConfigFile ...
-type ConfigFile struct {
-	Type struct {
-		Definitions string `json:"definitions"`
-	} `json:"type"`
-	Db struct {
-		Path string `json:"path"`
-	} `json:"db"`
-}
-
 // GetConfigFromFile ...
 func GetConfigFromFile(path string) (*ConfigFile, error) {
 	config := new(ConfigFile)
