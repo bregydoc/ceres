@@ -13,6 +13,6 @@ func init() {
 	var err error
 	DbUser, err = storm.Open("")
 	if err != nil {
-		log.Panicln("- storm.Open()", err.Error())
+		log.Fatalln("storm.Open()", err.Error())
 	}
 }
