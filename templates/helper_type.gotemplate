@@ -1,0 +1,125 @@
+package {{.TypePackage}}
+
+import (
+	"github.com/asdine/storm"
+	"github.com/satori/go.uuid"
+	"log"
+	"encoding/json"
+)
+
+type {{.TypeName}} struct {
+    {{- range .TypeFields }}
+    {{.Name}} {{.Type}} `{{.Tags}}`
+    {{- end}}
+}
+
+func Get{{.TypeName}}ByID(id uuid.UUID) (*{{.TypeName}}, error) {
+	{{.InternalTypeName}} := new({{.TypeName}})
+
+	if err := Db{{.TypeName}}.One("Id", id, {{.InternalTypeName}}); err != nil {
+		if err == storm.ErrNotFound {
+			log.Println("{{.TypeName}} not found")
+			return {{.InternalTypeName}}, err
+		}
+		log.Println("Db{{.TypeName}}.Find(), ", err.Error())
+		return {{.InternalTypeName}}, err
+	}
+	return {{.InternalTypeName}}, nil
+}
+
+func Get{{.TypeName}}ByAnyField(field string, value interface{}) (*{{.TypeName}}, error) {
+	{{.InternalTypeName}} := new({{.TypeName}})
+
+	if err := Db{{.TypeName}}.One(field, value, {{.InternalTypeName}}); err != nil {
+		if err == storm.ErrNotFound {
+			log.Println("{{.TypeName}} not found")
+			return {{.InternalTypeName}}, err
+		}
+		log.Println("Db{{.TypeName}}.Find(), ", err.Error())
+		return {{.InternalTypeName}}, err
+	}
+	return {{.InternalTypeName}}, nil
+}
+
+func GetAll{{.PluralTypeName}}() ([]*{{.TypeName}}, error) {
+	{{.PluralInternalTypeName}} := make([]*{{.TypeName}}, 0)
+	err := Db{{.TypeName}}.All(&{{.InternalTypeName}}s)
+	if err != nil {
+		return {{.PluralInternalTypeName}}, err
+	}
+	return {{.PluralInternalTypeName}}, nil
+}
+
+
+func CreateNew{{.TypeName}}WithRawData(data []byte) (*{{.TypeName}}, error) {
+	{{.InternalTypeName}} := new({{.TypeName}})
+	err := json.Unmarshal(data, {{.InternalTypeName}})
+	if err != nil {
+		log.Println("json.Unmarshal(), ", err.Error())
+		return {{.InternalTypeName}}, err
+	}
+	err = Db{{.TypeName}}.Save({{.InternalTypeName}})
+	if err != nil {
+		if err == storm.ErrAlreadyExists {
+			log.Println("{{.TypeName}} already exist")
+			return {{.InternalTypeName}}, err
+		}
+		log.Println("json.Unmarshal(), ", err.Error())
+		return {{.InternalTypeName}}, err
+	}
+
+	return {{.InternalTypeName}}, nil
+}
+
+func CreateNew{{.TypeName}}({{.InternalTypeName}} *{{.TypeName}}) (*{{.TypeName}}, error) {
+
+	err := Db{{.TypeName}}.Save({{.InternalTypeName}})
+	if err != nil {
+		if err == storm.ErrAlreadyExists {
+			log.Println("{{.TypeName}} already exist")
+			return {{.InternalTypeName}}, err
+		}
+		log.Println("json.Unmarshal(), ", err.Error())
+		return {{.InternalTypeName}}, err
+	}
+
+	return {{.InternalTypeName}}, nil
+}
+
+func Delete{{.TypeName}}ByID(id uuid.UUID) (*{{.TypeName}}, error) {
+
+	{{.InternalTypeName}}, err := Get{{.TypeName}}ByID(id)
+	if err != nil {
+		log.Println("Get{{.TypeName}}ByID(), ", err.Error())
+		return {{.InternalTypeName}}, err
+	}
+
+	err = Db{{.TypeName}}.DeleteStruct({{.InternalTypeName}})
+	if err != nil {
+		log.Println("DeleteStruct(), ", err.Error())
+		return {{.InternalTypeName}}, err
+	}
+
+	return {{.InternalTypeName}}, nil
+
+}
+
+func Delete{{.TypeName}}ByStruct({{.InternalTypeName}} *{{.TypeName}}) (*{{.TypeName}}, error) {
+	err := Db{{.TypeName}}.DeleteStruct({{.InternalTypeName}})
+	if err != nil {
+		log.Println("DeleteStruct(), ", err.Error())
+		return {{.InternalTypeName}}, err
+	}
+
+	return {{.InternalTypeName}}, nil
+}
+
+
+func Update{{.TypeName}}({{.InternalTypeName}} *{{.TypeName}}) (*{{.TypeName}}, error) {
+	err := Db{{.TypeName}}.Update({{.InternalTypeName}})
+	if err != nil {
+		log.Println("Db{{.TypeName}}.Update(), ", err.Error())
+		return {{.InternalTypeName}}, err
+	}
+	return {{.InternalTypeName}}, nil
+}
