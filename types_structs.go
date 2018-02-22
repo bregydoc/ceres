@@ -11,7 +11,7 @@ type TypeField struct {
 type TypeDefinition struct {
 	TypePackage            string
 	TypeName               string
-	TypeFields             []TypeField
+	TypeFields             []*TypeField
 	InternalTypeName       string
 	PluralTypeName         string
 	PluralInternalTypeName string

@@ -1,0 +1,13 @@
+package main
+
+// ServerFolderName ...
+const ServerFolderName = "server"
+
+// TypesFolderName ...
+const TypesFolderName = "types"
+
+// HelpersFolderName ...
+const HelpersFolderName = "helpers"
+
+// APIFolderName ...
+const APIFolderName = "api"

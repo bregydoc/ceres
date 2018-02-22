@@ -151,13 +151,11 @@ func inVowels(str string, list []string) bool {
 func AlreadyPluralized(test string) bool {
 	if len(test) != 1 {
 
-		// to handle words like genii, data and etc.
 		if singularDictionary[test] != "" {
 
 			return true
 		}
 
-		// put in some exceptions
 		//if (string(test[len(test)-1]) != "s") || (string(test[len(test)-2]) != "ii") {
 		if string(test[len(test)-1]) != "s" {
 
@@ -195,21 +193,16 @@ func Pluralize(singular string) string {
 
 		root := singular
 
-		// are we dealing with a single character?
-
 		if len(singular) == 1 {
 			return singular + "s"
 		}
 
 		plural = pluralDictionary[singular]
 
-		// found an exact match in map
 		if plural != "" {
 			return plural
-			//fmt.Println(plural)
 		}
 
-		// handle -sis
 		if string(singular[len(singular)-3:]) == "sis" {
 			root = string(singular[:len(singular)-3])
 			suffix = "ses"
@@ -217,7 +210,6 @@ func Pluralize(singular string) string {
 			return plural
 		}
 
-		// handle -z
 		if string(singular[len(singular)-1:]) == "z" {
 			root = string(singular[:len(singular)-1])
 			suffix = "zes"
@@ -225,7 +217,6 @@ func Pluralize(singular string) string {
 			return plural
 		}
 
-		// handle -ex
 		if string(singular[len(singular)-2:]) == "ex" {
 			root = string(singular[:len(singular)-2])
 			suffix = "ices"
@@ -233,7 +224,6 @@ func Pluralize(singular string) string {
 			return plural
 		}
 
-		// handle -ix
 		if string(singular[len(singular)-2:]) == "ix" {
 			root = string(singular[:len(singular)-2])
 			suffix = "ices"
@@ -241,7 +231,6 @@ func Pluralize(singular string) string {
 			return plural
 		}
 
-		// handle -us
 		if string(singular[len(singular)-2:]) == "us" {
 			root = string(singular[:len(singular)-2])
 			suffix = "uses"
@@ -249,7 +238,6 @@ func Pluralize(singular string) string {
 			return plural
 		}
 
-		// handle word such as dolly
 		if (string(singular[len(singular)-1]) == "y") && !inVowels(string(singular[len(singular)-2]), vowels) {
 			root = string(singular[:len(singular)-1])
 			suffix = "ies"
@@ -274,7 +262,6 @@ func Pluralize(singular string) string {
 
 		plural = root + suffix
 
-		// sanity check
 		if AlreadyPluralized(singular) {
 			return singular
 		}
