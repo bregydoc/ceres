@@ -1,6 +1,9 @@
 package types
 
-import uuid "github.com/satori/go.uuid"
+import (
+	"github.com/kataras/iris"
+	uuid "github.com/satori/go.uuid"
+)
 
 // User ...
 type User struct {
@@ -8,6 +11,20 @@ type User struct {
 	Name  string    `json:"name"`
 	Email string    `xml:"email"`
 
-	Password string
-	Boss     string
+	Password string `json:"password"`
+	Boss     string `json:"boss"`
+}
+
+// Post ...
+type Post struct {
+	ID          uuid.UUID
+	Title       string
+	Description string
+}
+
+// VirtualTeam ...
+type VirtualTeam struct {
+	ID     uuid.UUID
+	Name   string
+	MakeBy iris.Handler
 }

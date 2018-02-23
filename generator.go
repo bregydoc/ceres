@@ -1,9 +1,11 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"log"
 	"os"
+	"strings"
 )
 
 // GenerateFolderStruct ...
@@ -66,15 +68,57 @@ func GenerateHelpers(config *ConfigFile) error {
 			if err == os.ErrExist {
 				log.Println("Already exist")
 			} else {
-				panic(err)
+				return err
 			}
 
 		}
-		err = template.Execute(file, typeDef)
+
+		tempData := bytes.NewBufferString("")
+
+		err = template.Execute(tempData, typeDef)
 		if err != nil {
-			panic(err)
+			return err
 		}
 
+		rawData := tempData.String()
+
+		finalStringData := strings.Replace(string(rawData), "&#34;", "\"", -1)
+
+		_, err = file.Write([]byte(finalStringData))
+		if err != nil {
+			return err
+		}
+
+	}
+	return nil
+}
+
+// GenerateDbLinks ...
+func GenerateDbLinks(config *ConfigFile) error {
+	types, err := GetTypesDefinitions(config)
+	forTemplate := map[string][]*TypeDefinition{
+		"Types": types,
+	}
+
+	template, err := GetTemplate(InitDbTemplate)
+	if err != nil {
+		return err
+	}
+
+	filePath := fmt.Sprintf("./%s/helpers/init_db.go", config.Project.Name)
+
+	file, err := os.Create(filePath)
+	if err != nil {
+		if err == os.ErrExist {
+			log.Println("Already exist")
+		} else {
+			return err
+		}
+
+	}
+	err = template.Execute(file, forTemplate)
+	if err != nil {
+		return err
 	}
 	return nil
 }

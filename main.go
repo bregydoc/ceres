@@ -13,6 +13,11 @@ func main() {
 
 	pp.Println(configProject)
 
+	err = GenerateDbLinks(configProject)
+	if err != nil {
+		panic(err)
+	}
+
 	err = GenerateHelpers(configProject)
 	if err != nil {
 		panic(err)

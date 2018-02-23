@@ -1,0 +1,21 @@
+package helpers
+
+import (
+	"log"
+	"github.com/asdine/storm"
+)
+
+{{ range .Types}}
+// Db{{.TypeName}} ...
+var Db{{.TypeName}} *storm.DB
+{{ end}}
+
+func init() {
+	var err error
+	{{ range .Types }}
+	Db{{.TypeName}}, err = storm.Open("{{.TypeDbPath}}")
+	if err != nil {
+		log.Panicln("storm.Open() at {{.TypeName}}, ", err.Error())
+	}
+	{{end}}
+}

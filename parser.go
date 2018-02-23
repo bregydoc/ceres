@@ -33,7 +33,8 @@ func GetTypesDefinitions(config *ConfigFile) ([]*TypeDefinition, error) {
 				InternalTypeName:       strings.ToLower(ret.Name.Name),
 				PluralTypeName:         Pluralize(ret.Name.Name),
 				TypePackage:            strings.ToLower(ret.Name.Name),
-				PluralInternalTypeName: Pluralize(ret.Name.Name),
+				PluralInternalTypeName: strings.ToLower(Pluralize(ret.Name.Name)),
+				TypeDbPath:             Join(config.Db.Path, strings.ToLower(ret.Name.Name)+".db"),
 			})
 
 			return true
@@ -56,10 +57,16 @@ func GetTypesDefinitions(config *ConfigFile) ([]*TypeDefinition, error) {
 					tags = strings.Replace(f.Tag.Value, "`", "", -1)
 				}
 
+				fieldTypeR := fmt.Sprintf("%s", f.Type)
+				fieldTypeR = strings.Replace(fieldTypeR, "&", "", -1)
+				fieldTypeR = strings.Replace(fieldTypeR, "{", "", -1)
+				fieldTypeR = strings.Replace(fieldTypeR, "}", "", -1)
+				fieldTypeR = strings.Replace(fieldTypeR, " ", ".", -1)
+
 				fields = append(fields, &TypeField{
 					Name: f.Names[0].Name,
-					Type: fmt.Sprint(f.Type),
-					Tags: tags,
+					Type: fieldTypeR,
+					Tags: fmt.Sprintf("%s", tags),
 				})
 				//fmt.Println(f.Names[0], f.Type, strings.Replace(f.Tag.Value, "`", "", -1))
 			}

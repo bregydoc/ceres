@@ -7,12 +7,14 @@ import (
 	"encoding/json"
 )
 
+// {{.TypeName}} ...
 type {{.TypeName}} struct {
     {{- range .TypeFields }}
     {{.Name}} {{.Type}} `{{.Tags}}`
     {{- end}}
 }
 
+// Get{{.TypeName}}ByID ...
 func Get{{.TypeName}}ByID(id uuid.UUID) (*{{.TypeName}}, error) {
 	{{.InternalTypeName}} := new({{.TypeName}})
 
@@ -27,6 +29,7 @@ func Get{{.TypeName}}ByID(id uuid.UUID) (*{{.TypeName}}, error) {
 	return {{.InternalTypeName}}, nil
 }
 
+// Get{{.TypeName}}ByAnyField ...
 func Get{{.TypeName}}ByAnyField(field string, value interface{}) (*{{.TypeName}}, error) {
 	{{.InternalTypeName}} := new({{.TypeName}})
 
@@ -41,9 +44,10 @@ func Get{{.TypeName}}ByAnyField(field string, value interface{}) (*{{.TypeName}}
 	return {{.InternalTypeName}}, nil
 }
 
+// GetAll{{.PluralTypeName}} ...
 func GetAll{{.PluralTypeName}}() ([]*{{.TypeName}}, error) {
 	{{.PluralInternalTypeName}} := make([]*{{.TypeName}}, 0)
-	err := Db{{.TypeName}}.All(&{{.InternalTypeName}}s)
+	err := Db{{.TypeName}}.All(&{{.PluralInternalTypeName}})
 	if err != nil {
 		return {{.PluralInternalTypeName}}, err
 	}
@@ -51,6 +55,7 @@ func GetAll{{.PluralTypeName}}() ([]*{{.TypeName}}, error) {
 }
 
 
+// CreateNew{{.TypeName}}WithRawData ...
 func CreateNew{{.TypeName}}WithRawData(data []byte) (*{{.TypeName}}, error) {
 	{{.InternalTypeName}} := new({{.TypeName}})
 	err := json.Unmarshal(data, {{.InternalTypeName}})
@@ -71,6 +76,7 @@ func CreateNew{{.TypeName}}WithRawData(data []byte) (*{{.TypeName}}, error) {
 	return {{.InternalTypeName}}, nil
 }
 
+// CreateNew{{.TypeName}} ...
 func CreateNew{{.TypeName}}({{.InternalTypeName}} *{{.TypeName}}) (*{{.TypeName}}, error) {
 
 	err := Db{{.TypeName}}.Save({{.InternalTypeName}})
@@ -86,6 +92,7 @@ func CreateNew{{.TypeName}}({{.InternalTypeName}} *{{.TypeName}}) (*{{.TypeName}
 	return {{.InternalTypeName}}, nil
 }
 
+// Delete{{.TypeName}}ByID ...
 func Delete{{.TypeName}}ByID(id uuid.UUID) (*{{.TypeName}}, error) {
 
 	{{.InternalTypeName}}, err := Get{{.TypeName}}ByID(id)
@@ -104,6 +111,7 @@ func Delete{{.TypeName}}ByID(id uuid.UUID) (*{{.TypeName}}, error) {
 
 }
 
+// Delete{{.TypeName}}ByStruct ...
 func Delete{{.TypeName}}ByStruct({{.InternalTypeName}} *{{.TypeName}}) (*{{.TypeName}}, error) {
 	err := Db{{.TypeName}}.DeleteStruct({{.InternalTypeName}})
 	if err != nil {
@@ -115,6 +123,7 @@ func Delete{{.TypeName}}ByStruct({{.InternalTypeName}} *{{.TypeName}}) (*{{.Type
 }
 
 
+// Update{{.TypeName}} ...
 func Update{{.TypeName}}({{.InternalTypeName}} *{{.TypeName}}) (*{{.TypeName}}, error) {
 	err := Db{{.TypeName}}.Update({{.InternalTypeName}})
 	if err != nil {
