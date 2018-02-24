@@ -1,8 +1,10 @@
 package main
 
 import (
+	"go/build"
 	"html/template"
 	"io/ioutil"
+	"os"
 )
 
 // HelperTemplate ...
@@ -19,6 +21,14 @@ const InitDbTemplate = 3
 
 // GetTemplate ...
 func GetTemplate(templateKind int, templatePath ...string) (*template.Template, error) {
+
+	gopath := os.Getenv("GOPATH")
+	if gopath == "" {
+		gopath = build.Default.GOPATH
+	}
+
+	ceresPath := Join(gopath, "src/github.com/bregydoc/ceres")
+
 	var templateData []byte
 	var nameForTemplate string
 
@@ -35,28 +45,28 @@ func GetTemplate(templateKind int, templatePath ...string) (*template.Template, 
 		var err error
 		switch templateKind {
 		case HelperTemplate:
-			templateData, err = ioutil.ReadFile("./templates/helper_type.gotemplate")
+			templateData, err = ioutil.ReadFile(Join(ceresPath, "templates/helper_type.gotemplate"))
 			if err != nil {
 				return nil, err
 			}
 			nameForTemplate = "helperTemplate"
 			break
 		case APITemplate:
-			templateData, err = ioutil.ReadFile("./templates/helper_type.gotemplate")
+			templateData, err = ioutil.ReadFile(Join(ceresPath, "templates/api_type_linker.gotemplate"))
 			if err != nil {
 				return nil, err
 			}
-			nameForTemplate = "helperTemplate"
+			nameForTemplate = "apiTemplate"
 			break
 		case TypeTemplate:
-			templateData, err = ioutil.ReadFile("./templates/helper_type.gotemplate")
+			templateData, err = ioutil.ReadFile(Join(ceresPath, "templates/helper_type.gotemplate"))
 			if err != nil {
 				return nil, err
 			}
 			nameForTemplate = "helperTemplate"
 			break
 		case InitDbTemplate:
-			templateData, err = ioutil.ReadFile("./templates/init_type.gotemplate")
+			templateData, err = ioutil.ReadFile(Join(ceresPath, "templates/init_type.gotemplate"))
 			if err != nil {
 				return nil, err
 			}

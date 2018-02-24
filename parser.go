@@ -35,6 +35,7 @@ func GetTypesDefinitions(config *ConfigFile) ([]*TypeDefinition, error) {
 				TypePackage:            strings.ToLower(ret.Name.Name),
 				PluralInternalTypeName: strings.ToLower(Pluralize(ret.Name.Name)),
 				TypeDbPath:             Join(config.Db.Path, strings.ToLower(ret.Name.Name)+".db"),
+				InternalAPIName:        Snakeazer(ret.Name.Name),
 			})
 
 			return true

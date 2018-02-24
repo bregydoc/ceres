@@ -1,4 +1,4 @@
-package templatetype
+package api
 
 import (
 	"errors"
@@ -6,6 +6,7 @@ import (
 
 	"github.com/kataras/iris"
 	uuid "github.com/satori/go.uuid"
+	"../helpers"
 )
 
 // Response ...
@@ -14,11 +15,11 @@ type Response struct {
 	Error interface{} `json:"error"`
 }
 
-// LinkWithUserType ...
-func LinkWithUserType(api iris.Party) {
-	api.Get("/user/{id:string}", func(c iris.Context) {
-		userID := c.Params().Get("id")
-		ID, err := uuid.FromString(userID)
+// LinkWith{{.TypeName}}Type ...
+func LinkWith{{.TypeName}}Type(api iris.Party) {
+	api.Get("/{{.InternalAPIName}}/{id:string}", func(c iris.Context) {
+		{{.InternalTypeName}}ID := c.Params().Get("id")
+		ID, err := uuid.FromString({{.InternalTypeName}}ID)
 		if err != nil {
 			log.Println("uuid.FromString(), ", err)
 			c.StatusCode(iris.StatusInternalServerError)
@@ -29,24 +30,24 @@ func LinkWithUserType(api iris.Party) {
 			return
 		}
 
-		user, err := GetUserByID(ID)
+		{{.InternalTypeName}}, err := helpers.Get{{.TypeName}}ByID(ID)
 		if err != nil {
-			log.Println("GetUserByID(), ", err)
+			log.Println("Get{{.TypeName}}ByID(), ", err)
 			c.StatusCode(iris.StatusInternalServerError)
 		} else {
 			c.StatusCode(iris.StatusOK)
 		}
 
 		c.JSON(Response{
-			Data:  user,
+			Data:  {{.InternalTypeName}},
 			Error: err,
 		})
 
 	})
 
-	api.Post("/user/create", func(c iris.Context) {
-		user := new(User)
-		err := c.ReadForm(user)
+	api.Post("/{{.InternalAPIName}}/create", func(c iris.Context) {
+		{{.InternalTypeName}} := new(helpers.{{.TypeName}})
+		err := c.ReadForm({{.InternalTypeName}})
 		if err != nil {
 			log.Println("c.ReadForm(), ", err)
 			c.StatusCode(iris.StatusInternalServerError)
@@ -58,7 +59,7 @@ func LinkWithUserType(api iris.Party) {
 		}
 
 		// If not have Id
-		if user.ID.String() == "" {
+		if {{.InternalTypeName}}.ID.String() == "" {
 			newID, err := uuid.NewV4()
 			if err != nil {
 				log.Println("uuid.NewV4(), ", err)
@@ -69,12 +70,12 @@ func LinkWithUserType(api iris.Party) {
 				})
 				return
 			}
-			user.ID = newID
+			{{.InternalTypeName}}.ID = newID
 		}
 
-		returnedUser, err := CreateNewUser(user)
+		returned{{.TypeName}}, err := helpers.CreateNew{{.TypeName}}({{.InternalTypeName}})
 		if err != nil {
-			log.Println("CreateNewUser(), ", err)
+			log.Println("CreateNew{{.TypeName}}(), ", err)
 			c.StatusCode(iris.StatusInternalServerError)
 			c.JSON(Response{
 				Data:  nil,
@@ -85,14 +86,14 @@ func LinkWithUserType(api iris.Party) {
 
 		c.StatusCode(iris.StatusOK)
 		c.JSON(Response{
-			Data:  returnedUser,
+			Data:  returned{{.TypeName}},
 			Error: err,
 		})
 	})
 
-	api.Post("/user/update", func(c iris.Context) {
-		user := new(User)
-		err := c.ReadForm(user)
+	api.Post("/{{.InternalAPIName}}/update", func(c iris.Context) {
+		{{.InternalTypeName}} := new(helpers.{{.TypeName}})
+		err := c.ReadForm({{.InternalTypeName}})
 		if err != nil {
 			log.Println("c.ReadForm(), ", err)
 			c.StatusCode(iris.StatusInternalServerError)
@@ -104,7 +105,7 @@ func LinkWithUserType(api iris.Party) {
 		}
 
 		// If not have Id
-		if user.ID.String() == "" {
+		if {{.InternalTypeName}}.ID.String() == "" {
 			log.Println("Update method needs Id")
 			c.StatusCode(iris.StatusInternalServerError)
 			c.JSON(Response{
@@ -114,9 +115,9 @@ func LinkWithUserType(api iris.Party) {
 			return
 		}
 
-		updatedUser, err := UpdateUser(user)
+		updated{{.TypeName}}, err := helpers.Update{{.TypeName}}({{.InternalTypeName}})
 		if err != nil {
-			log.Println("UpdateUser(), ", err)
+			log.Println("Update{{.TypeName}}(), ", err)
 			c.StatusCode(iris.StatusInternalServerError)
 			c.JSON(Response{
 				Data:  nil,
@@ -127,13 +128,13 @@ func LinkWithUserType(api iris.Party) {
 
 		c.StatusCode(iris.StatusOK)
 		c.JSON(Response{
-			Data:  updatedUser,
+			Data:  updated{{.TypeName}},
 			Error: err,
 		})
 
 	})
 
-	api.Post("/user/delete", func(c iris.Context) {
+	api.Post("/{{.InternalAPIName}}/delete", func(c iris.Context) {
 		type IDForm struct {
 			ID uuid.UUID `json:"id"`
 		}
@@ -150,7 +151,7 @@ func LinkWithUserType(api iris.Party) {
 			return
 		}
 
-		returnedUser, err := DeleteUserByID(idForm.ID)
+		returned{{.TypeName}}, err := helpers.Delete{{.TypeName}}ByID(idForm.ID)
 
 		if err != nil {
 			c.StatusCode(iris.StatusInternalServerError)
@@ -159,7 +160,7 @@ func LinkWithUserType(api iris.Party) {
 		}
 
 		c.JSON(Response{
-			Data:  returnedUser,
+			Data:  returned{{.TypeName}},
 			Error: err,
 		})
 

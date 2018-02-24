@@ -122,3 +122,41 @@ func GenerateDbLinks(config *ConfigFile) error {
 	}
 	return nil
 }
+
+// GenerateAPILinkers ...
+func GenerateAPILinkers(config *ConfigFile) error {
+	types, err := GetTypesDefinitions(config)
+	if err != nil {
+		return err
+	}
+
+	template, err := GetTemplate(APITemplate)
+	if err != nil {
+		return err
+	}
+
+	for _, typeDef := range types {
+		filePath := fmt.Sprintf(
+			"./%s/api/%s_linker.go",
+			config.Project.Name,
+			typeDef.TypePackage,
+		)
+
+		file, err := os.Create(filePath)
+		if err != nil {
+			if err == os.ErrExist {
+				log.Println("Already exist")
+			} else {
+				return err
+			}
+
+		}
+
+		err = template.Execute(file, typeDef)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}

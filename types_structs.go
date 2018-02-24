@@ -16,4 +16,5 @@ type TypeDefinition struct {
 	PluralTypeName         string
 	PluralInternalTypeName string
 	TypeDbPath             string
+	InternalAPIName        string
 }

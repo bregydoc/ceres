@@ -13,6 +13,11 @@ func main() {
 
 	pp.Println(configProject)
 
+	err = GenerateFolderStruct(configProject.Project.Name, true)
+	if err != nil {
+		panic(err)
+	}
+
 	err = GenerateDbLinks(configProject)
 	if err != nil {
 		panic(err)
@@ -23,4 +28,8 @@ func main() {
 		panic(err)
 	}
 
+	err = GenerateAPILinkers(configProject)
+	if err != nil {
+		panic(err)
+	}
 }
