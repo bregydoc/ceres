@@ -1,0 +1,22 @@
+package templatetype
+
+import (
+	"fmt"
+	"github.com/kataras/iris"
+	"./api"
+)
+
+const apiVersion = "{{.ProjectVersion}}"
+
+func main() {
+	app := iris.Default()
+
+	apiParty := app.Party(fmt.Sprintf("/api/v%s", apiVersion))
+
+	{{ range .Types }}
+	api.LinkWith{{.TypeName}}Type(apiParty)
+	{{end}}
+
+	app.Run(iris.Addr(":8080"))
+
+}

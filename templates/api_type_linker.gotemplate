@@ -9,11 +9,6 @@ import (
 	"../helpers"
 )
 
-// Response ...
-type Response struct {
-	Data  interface{} `json:"data"`
-	Error interface{} `json:"error"`
-}
 
 // LinkWith{{.TypeName}}Type ...
 func LinkWith{{.TypeName}}Type(api iris.Party) {

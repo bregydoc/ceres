@@ -19,6 +19,12 @@ const TypeTemplate = 2
 // InitDbTemplate ...
 const InitDbTemplate = 3
 
+// APIResponseTemplate ...
+const APIResponseTemplate = 4
+
+// APIResponseTemplate ...
+const ServerMainTemplate = 5
+
 // GetTemplate ...
 func GetTemplate(templateKind int, templatePath ...string) (*template.Template, error) {
 
@@ -51,6 +57,7 @@ func GetTemplate(templateKind int, templatePath ...string) (*template.Template, 
 			}
 			nameForTemplate = "helperTemplate"
 			break
+
 		case APITemplate:
 			templateData, err = ioutil.ReadFile(Join(ceresPath, "templates/api_type_linker.gotemplate"))
 			if err != nil {
@@ -58,20 +65,39 @@ func GetTemplate(templateKind int, templatePath ...string) (*template.Template, 
 			}
 			nameForTemplate = "apiTemplate"
 			break
+
 		case TypeTemplate:
 			templateData, err = ioutil.ReadFile(Join(ceresPath, "templates/helper_type.gotemplate"))
 			if err != nil {
 				return nil, err
 			}
-			nameForTemplate = "helperTemplate"
+			nameForTemplate = "typeTemplate"
 			break
+
 		case InitDbTemplate:
 			templateData, err = ioutil.ReadFile(Join(ceresPath, "templates/init_type.gotemplate"))
 			if err != nil {
 				return nil, err
 			}
-			nameForTemplate = "dbLinkTemplate"
+			nameForTemplate = "initDbTemplate"
 			break
+
+		case APIResponseTemplate:
+			templateData, err = ioutil.ReadFile(Join(ceresPath, "templates/api_response_type.gotemplate"))
+			if err != nil {
+				return nil, err
+			}
+			nameForTemplate = "apiResponseTemplate"
+			break
+
+		case ServerMainTemplate:
+			templateData, err = ioutil.ReadFile(Join(ceresPath, "templates/server.gotemplate"))
+			if err != nil {
+				return nil, err
+			}
+			nameForTemplate = "serverMainTemplate"
+			break
+
 		default:
 			break
 		}

@@ -32,4 +32,9 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	err = GenerateServerMain(configProject)
+	if err != nil {
+		panic(err)
+	}
 }

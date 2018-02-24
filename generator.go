@@ -158,5 +158,69 @@ func GenerateAPILinkers(config *ConfigFile) error {
 		}
 	}
 
+	responseTemplate, err := GetTemplate(APIResponseTemplate)
+	if err != nil {
+		return err
+	}
+
+	fileResponsePath := fmt.Sprintf(
+		"./%s/api/response.go",
+		config.Project.Name,
+	)
+
+	fileResponse, err := os.Create(fileResponsePath)
+	if err != nil {
+		if err == os.ErrExist {
+			log.Println("Already exist")
+		} else {
+			return err
+		}
+
+	}
+
+	err = responseTemplate.Execute(fileResponse, nil)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// GenerateServerMain ...
+func GenerateServerMain(config *ConfigFile) error {
+	types, err := GetTypesDefinitions(config)
+	if err != nil {
+		return err
+	}
+
+	template, err := GetTemplate(ServerMainTemplate)
+	if err != nil {
+		return err
+	}
+
+	forTemplate := map[string]interface{}{
+		"Types":          types,
+		"ProjectVersion": config.Project.Version,
+	}
+
+	filePath := fmt.Sprintf(
+		"./%s/main.go",
+		config.Project.Name,
+	)
+
+	file, err := os.Create(filePath)
+	if err != nil {
+		if err == os.ErrExist {
+			log.Println("Already exist")
+		} else {
+			return err
+		}
+
+	}
+
+	err = template.Execute(file, forTemplate)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
