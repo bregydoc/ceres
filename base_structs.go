@@ -18,3 +18,8 @@ type TypeDefinition struct {
 	TypeDbPath             string
 	InternalAPIName        string
 }
+
+// ImportDefinition ...
+type ImportDefinition struct {
+	ImportName string
+}

@@ -80,3 +80,5 @@ func GetTypesDefinitions(config *ConfigFile) ([]*TypeDefinition, error) {
 
 	return types, nil
 }
+
+// func GetImportsFromTypesFile(config *ConfigFile)

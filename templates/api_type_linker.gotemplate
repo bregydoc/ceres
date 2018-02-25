@@ -45,6 +45,25 @@ func LinkWith{{.TypeName}}Type(api iris.Party) {
 
 	})
 
+	api.Get("/{{.InternalAPIName}}/all", func(c iris.Context) {
+		{{.PluralInternalTypeName}}, err := helpers.GetAll{{.PluralTypeName}}()
+		if err != nil {
+			log.Println("GetAll{{.PluralTypeName}}(), ", err)
+			c.StatusCode(iris.StatusInternalServerError)
+			c.JSON(Response{
+				Data:  nil,
+				Error: err.Error(),
+			})
+		} else {
+			c.StatusCode(iris.StatusOK)
+			c.JSON(Response{
+				Data:  {{.PluralInternalTypeName}},
+				Error: nil,
+			})
+		}
+
+	})
+
 	api.Post("/{{.InternalAPIName}}/create", func(c iris.Context) {
 		{{.InternalTypeName}} := new(helpers.{{.TypeName}})
 		err := c.ReadForm({{.InternalTypeName}})

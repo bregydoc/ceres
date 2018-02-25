@@ -1,6 +1,16 @@
 package main
 
-import "github.com/k0kubun/pp"
+import (
+	"bytes"
+	"fmt"
+	"go/ast"
+	"go/parser"
+	"go/printer"
+	"go/token"
+	"io/ioutil"
+
+	"github.com/k0kubun/pp"
+)
 
 func main() {
 
@@ -9,12 +19,29 @@ func main() {
 		panic(err)
 	}
 
-	types, err := GetTypesDefinitions(configProject)
+	fset := token.NewFileSet()
+
+	src, _ := ioutil.ReadFile(configProject.Types.Definitions)
+
+	f, err := parser.ParseFile(fset, "", src, parser.Trace)
 	if err != nil {
+		fmt.Println(err)
 		panic(err)
 	}
 
-	pp.Println(types)
+	ast.Inspect(f, func(n ast.Node) bool {
+
+		ret, ok := n.(*ast.ImportSpec)
+		if ok {
+			pp.Println(ret)
+			buf := bytes.NewBufferString("")
+			printer.Fprint(buf, fset, ret)
+			fmt.Println(buf.String())
+			return true
+		}
+		return true
+
+	})
 	// pp.Println(configProject)
 
 	// err = GenerateFolderStruct(configProject.Project.Name, true)
