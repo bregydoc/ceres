@@ -1,9 +1,11 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"go/ast"
 	"go/parser"
+	"go/printer"
 	"go/token"
 	"io/ioutil"
 	"strings"
@@ -58,15 +60,12 @@ func GetTypesDefinitions(config *ConfigFile) ([]*TypeDefinition, error) {
 					tags = strings.Replace(f.Tag.Value, "`", "", -1)
 				}
 
-				fieldTypeR := fmt.Sprintf("%s", f.Type)
-				fieldTypeR = strings.Replace(fieldTypeR, "&", "", -1)
-				fieldTypeR = strings.Replace(fieldTypeR, "{", "", -1)
-				fieldTypeR = strings.Replace(fieldTypeR, "}", "", -1)
-				fieldTypeR = strings.Replace(fieldTypeR, " ", ".", -1)
+				bufFieldType := bytes.NewBufferString("")
+				printer.Fprint(bufFieldType, fset, f.Type)
 
 				fields = append(fields, &TypeField{
 					Name: f.Names[0].Name,
-					Type: fieldTypeR,
+					Type: bufFieldType.String(),
 					Tags: fmt.Sprintf("%s", tags),
 				})
 				//fmt.Println(f.Names[0], f.Type, strings.Replace(f.Tag.Value, "`", "", -1))

@@ -20,7 +20,7 @@ func LinkWith{{.TypeName}}Type(api iris.Party) {
 			c.StatusCode(iris.StatusInternalServerError)
 			c.JSON(Response{
 				Data:  nil,
-				Error: err,
+				Error: err.Error(),
 			})
 			return
 		}
@@ -29,14 +29,19 @@ func LinkWith{{.TypeName}}Type(api iris.Party) {
 		if err != nil {
 			log.Println("Get{{.TypeName}}ByID(), ", err)
 			c.StatusCode(iris.StatusInternalServerError)
+			c.JSON(Response{
+				Data:  nil,
+				Error: err.Error(),
+			})
 		} else {
 			c.StatusCode(iris.StatusOK)
+			c.JSON(Response{
+				Data:  {{.InternalTypeName}},
+				Error: nil,
+			})
 		}
 
-		c.JSON(Response{
-			Data:  {{.InternalTypeName}},
-			Error: err,
-		})
+		
 
 	})
 
@@ -48,20 +53,20 @@ func LinkWith{{.TypeName}}Type(api iris.Party) {
 			c.StatusCode(iris.StatusInternalServerError)
 			c.JSON(Response{
 				Data:  nil,
-				Error: err,
+				Error: err.Error(),
 			})
 			return
 		}
 
 		// If not have Id
-		if {{.InternalTypeName}}.ID.String() == "" {
+		if uuid.Equal({{.InternalTypeName}}.ID, uuid.Nil) {
 			newID, err := uuid.NewV4()
 			if err != nil {
 				log.Println("uuid.NewV4(), ", err)
 				c.StatusCode(iris.StatusInternalServerError)
 				c.JSON(Response{
 					Data:  nil,
-					Error: err,
+					Error: err.Error(),
 				})
 				return
 			}
@@ -74,7 +79,7 @@ func LinkWith{{.TypeName}}Type(api iris.Party) {
 			c.StatusCode(iris.StatusInternalServerError)
 			c.JSON(Response{
 				Data:  nil,
-				Error: err,
+				Error: err.Error(),
 			})
 			return
 		}
@@ -82,7 +87,7 @@ func LinkWith{{.TypeName}}Type(api iris.Party) {
 		c.StatusCode(iris.StatusOK)
 		c.JSON(Response{
 			Data:  returned{{.TypeName}},
-			Error: err,
+			Error: nil,
 		})
 	})
 
@@ -94,18 +99,18 @@ func LinkWith{{.TypeName}}Type(api iris.Party) {
 			c.StatusCode(iris.StatusInternalServerError)
 			c.JSON(Response{
 				Data:  nil,
-				Error: err,
+				Error: err.Error(),
 			})
 			return
 		}
 
 		// If not have Id
-		if {{.InternalTypeName}}.ID.String() == "" {
+		if uuid.Equal({{.InternalTypeName}}.ID, uuid.Nil) {
 			log.Println("Update method needs Id")
 			c.StatusCode(iris.StatusInternalServerError)
 			c.JSON(Response{
 				Data:  nil,
-				Error: errors.New("Update method needs Id"),
+				Error: errors.New("Update method needs Id").Error(),
 			})
 			return
 		}
@@ -116,7 +121,7 @@ func LinkWith{{.TypeName}}Type(api iris.Party) {
 			c.StatusCode(iris.StatusInternalServerError)
 			c.JSON(Response{
 				Data:  nil,
-				Error: err,
+				Error: err.Error(),
 			})
 			return
 		}
@@ -124,7 +129,7 @@ func LinkWith{{.TypeName}}Type(api iris.Party) {
 		c.StatusCode(iris.StatusOK)
 		c.JSON(Response{
 			Data:  updated{{.TypeName}},
-			Error: err,
+			Error: nil,
 		})
 
 	})
@@ -141,7 +146,7 @@ func LinkWith{{.TypeName}}Type(api iris.Party) {
 			c.StatusCode(iris.StatusInternalServerError)
 			c.JSON(Response{
 				Data:  nil,
-				Error: err,
+				Error: err.Error(),
 			})
 			return
 		}
@@ -150,14 +155,17 @@ func LinkWith{{.TypeName}}Type(api iris.Party) {
 
 		if err != nil {
 			c.StatusCode(iris.StatusInternalServerError)
+			c.JSON(Response{
+				Data:  returned{{.TypeName}},
+				Error: err.Error(),
+			})
 		} else {
 			c.StatusCode(iris.StatusOK)
+			c.JSON(Response{
+				Data:  returned{{.TypeName}},
+				Error: nil,
+			})
 		}
-
-		c.JSON(Response{
-			Data:  returned{{.TypeName}},
-			Error: err,
-		})
 
 	})
 }

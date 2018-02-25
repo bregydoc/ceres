@@ -18,7 +18,7 @@ type {{.TypeName}} struct {
 func Get{{.TypeName}}ByID(id uuid.UUID) (*{{.TypeName}}, error) {
 	{{.InternalTypeName}} := new({{.TypeName}})
 
-	if err := Db{{.TypeName}}.One("Id", id, {{.InternalTypeName}}); err != nil {
+	if err := Db{{.TypeName}}.One("ID", id, {{.InternalTypeName}}); err != nil {
 		if err == storm.ErrNotFound {
 			log.Println("{{.TypeName}} not found")
 			return {{.InternalTypeName}}, err

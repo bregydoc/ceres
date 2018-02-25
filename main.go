@@ -1,8 +1,6 @@
 package main
 
-import (
-	"github.com/k0kubun/pp"
-)
+import "github.com/k0kubun/pp"
 
 func main() {
 
@@ -11,32 +9,38 @@ func main() {
 		panic(err)
 	}
 
-	pp.Println(configProject)
-
-	err = GenerateFolderStruct(configProject.Project.Name, true)
+	types, err := GetTypesDefinitions(configProject)
 	if err != nil {
 		panic(err)
 	}
 
-	err = GenerateDbLinks(configProject)
-	if err != nil {
-		panic(err)
-	}
+	pp.Println(types)
+	// pp.Println(configProject)
 
-	err = GenerateHelpers(configProject)
-	if err != nil {
-		panic(err)
-	}
+	// err = GenerateFolderStruct(configProject.Project.Name, true)
+	// if err != nil {
+	// 	panic(err)
+	// }
 
-	err = GenerateAPILinkers(configProject)
-	if err != nil {
-		panic(err)
-	}
+	// err = GenerateDbLinks(configProject)
+	// if err != nil {
+	// 	panic(err)
+	// }
 
-	err = GenerateServerMain(configProject)
-	if err != nil {
-		panic(err)
-	}
+	// err = GenerateHelpers(configProject)
+	// if err != nil {
+	// 	panic(err)
+	// }
+
+	// err = GenerateAPILinkers(configProject)
+	// if err != nil {
+	// 	panic(err)
+	// }
+
+	// err = GenerateServerMain(configProject)
+	// if err != nil {
+	// 	panic(err)
+	// }
 }
 
 // package main
